@@ -1,0 +1,23 @@
+{
+  "name": "rpihomeautomation",
+  "version": "1.0.0",
+  "description": "Automate all the things",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "home",
+    "automation",
+    "homeauto",
+    "raspberry",
+    "pi",
+    "linux"
+  ],
+  "author": "bobymcbobs",
+  "license": "GPL-3.0",
+  "dependencies": {
+    "pouchdb": "^7.0.0"
+  }
+}
