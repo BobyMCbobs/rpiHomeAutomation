@@ -10,7 +10,9 @@ Install node modules inside the cloned repo: `npm i`
 And to install pigpio run: `npm i pigpio`  
 
 ## Running
-`sudo node index.js`
+`sudo node index.js`  
+
+Go to `http://IPADDRESS:3100` in your web browser on another device to access it.  
 
 ## Notes
 Runtime dependencies: 
