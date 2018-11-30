@@ -9,6 +9,9 @@ Install `node` and `npm` via your package manager
 Install node modules inside the cloned repo: `npm i`  
 And to install pigpio run: `npm i pigpio`  
 
+## Running
+`sudo node index.js`
+
 ## Notes
 Runtime dependencies: 
 - `pigpio` via npm  
