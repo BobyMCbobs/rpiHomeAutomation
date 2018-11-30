@@ -37,7 +37,6 @@ body {
 	right: 0;
 	position: fixed;
 	margin-bottom: 10px;
-	text-align: center;
 	color: white;
 	margin-bottom: 100px;
 	box-shadow: 5px 10px 28px rgba(0, 0, 0, 0.35);
@@ -47,10 +46,6 @@ body {
 
 .buttonDisplay {
   background-color: #3e3d3d;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  right: 0;
   padding-top: 20px;
   padding-bottom: 20px;
   margin-top: 80px;
@@ -58,7 +53,12 @@ body {
   width: 80%;
   margin-left: 10%;
   margin-right: 10%;
-  text-align: center;
+}
+
+.buttonDisplay_bottom {
+  background-color: black;
+  margin-bottom: -20px;
+  margin-top: 20px;
 }
 
 .centerOnLeft {
@@ -70,8 +70,6 @@ body {
 
 .itemButtons {
 	margin: 0;
-	position: absolute;
-	transform: translate(-50%);
   font-weight: bold;
 	background-color: #e5e6e5;
 	border-radius: 5px;
@@ -83,7 +81,9 @@ body {
 	padding: 9px 23px;
 	text-decoration: none;
 	position: relative;
-	margin-top: 0px;
+	font-size: 16px;
+	margin-bottom: 1.5px;
+  margin-top: 1.5px;
 }
 
 .itemButtons:hover {
@@ -96,5 +96,5 @@ body {
 }
 
 .itemButtons_oneshot:active {
-  background-color: brown;
+  background-color: blue;
 }
