@@ -5,9 +5,10 @@ There is basic functionality, but many things are lacking.
 
 ## Getting started
 Install `node` and `npm` via your package manager  
-
 Install node modules inside the cloned repo: `npm i`  
-And to install pigpio run: `npm i pigpio`  
+
+Testing:  
+As of right now, to get any buttons to show up, you must run `node writeMockDataToDB.js`  
 
 ## Running
 `sudo node index.js`  

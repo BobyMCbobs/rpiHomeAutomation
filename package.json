@@ -18,6 +18,7 @@
   "author": "bobymcbobs",
   "license": "GPL-3.0",
   "dependencies": {
+    "pigpio": "^1.2.0",
     "pouchdb": "^7.0.0"
   }
 }
