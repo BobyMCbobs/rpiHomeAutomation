@@ -1,0 +1,23 @@
+{
+	"buttons": [
+		{
+			"name": "Bed Lamp",
+			"description": "Toggle my bed lamp",
+			"pin": 2,
+			"id": "RANDOMSTR1",
+			"mode": "OUTPUT",
+			"type": "toggle",
+			"pinLastState": 1
+		},
+		{
+			"name": "Computer",
+			"description": "Switch on my computer",
+			"pin": 11,
+			"id": "RANDOMSTR2",
+			"mode": "OUTPUT",
+			"type": "oneshot",
+			"defaultState": false,
+			"pinLastState": 0
+		}
+	]
+}

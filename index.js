@@ -1,36 +1,18 @@
 const http = require('http'),
-  PouchDB = require('pouchdb'),
-  db = new PouchDB('rha'),
   fs = require('fs');
   Gpio = require('pigpio').Gpio;
 
-var dbData = {}
+var configFile = './config.json',
+  dbData = require(configFile);
 
 function writeUserConfig(data) {
   // write config user's config to database
-  data._id = data.id;
-	db.put(data, function callback(err, result) {
-		if (!err) {
-			console.log('[DATA] Successfully wrote:', data.name);
-		}
-		else console.log('[DATA] error:', err)
-	});
+  fs.writeFileSync(configFile, JSON.stringify(dbData, null, 4));
 }
 
 function readUserConfig() {
   // read user's config from database
-  return db.allDocs({
-    include_docs: true,
-    attachments: true
-  }).then(function (result) {
-    var data = [];
-    result.rows.map(i => {
-      data = [...data, i.doc];
-    });
-    return data;
-  }).catch(function (err) {
-    console.log(err);
-  });
+  return require(configFile);
 }
 
 function getPinState(pin) {
@@ -45,7 +27,16 @@ function pinStateToEnglish(state) {
   else if (state === 1) return "high";
 }
 
-function togglePin(pin, mode = "OUTPUT") {
+function writePin({pin, mode = "OUTPUT", state}) {
+  // switch pin to opposite state
+  var pin = new Gpio(pin, {
+    mode: Gpio[mode]
+  });
+  console.log(`[PINTOGGLE] Writing pin #${pin.gpio} ${pinStateToEnglish(pinState)}`);
+  pin.digitalWrite(state);
+}
+
+function togglePin({pin, mode = "OUTPUT", id}) {
   // switch pin to opposite state
   var pin = new Gpio(pin, {
     mode: Gpio[mode]
@@ -53,6 +44,14 @@ function togglePin(pin, mode = "OUTPUT") {
   var pinState = pin.digitalRead();
   console.log(`[PINTOGGLE] Toggling #${pin.gpio} from ${pinStateToEnglish(pinState)} to ${pinStateToEnglish(pinState === 0 ? 1 : 0)}`);
   pin.digitalWrite(pinState === 0 ? 1 : 0);
+  for (i in dbData.buttons) {
+    if (dbData.buttons[i].id === id) {
+      dbData.buttons[i].pinLastState = pin.digitalRead();
+      console.log(`[PINTOGGLE] updated '${dbData.buttons[i].name}' in '${configFile}' with new lastPinState of '${dbData.buttons[i].pinLastState}'`);
+      writeUserConfig();
+      break;
+    }
+  }
 }
 
 function collectRequestData(request, callback) {
@@ -73,15 +72,9 @@ function collectRequestData(request, callback) {
 
 function loadPinsState(pin) {
   // load pin's states into dbData
-  dbData = {
-    buttons: []
-  }
-  readUserConfig().then(data => {
-    for (button in data) {
-      dbData.buttons[button] = data[button];
+  for (button in dbData.buttons) {
       dbData.buttons[button].state = getPinState(dbData.buttons[button].pin);
     }
-  });
   console.log("[DBLOAD] data loaded");
 }
 
@@ -97,7 +90,7 @@ http.createServer((req, res) => {
       res.end();
     }
     else if (req.url == '/data.json') {
-      res.write(JSON.stringify(dbData));
+      res.write(JSON.stringify(dbData.buttons));
       res.end();
     }
     else if (req.url.split('/')[1] === "assets" && fs.existsSync(`.${req.url}`) === true && fs.lstatSync(`.${req.url}`).isFile()) {
@@ -114,9 +107,9 @@ http.createServer((req, res) => {
 		  switch (result.sendType) {
 		    case 'buttonAction':
 		      console.log(`[PINTOGGLE] Toggling GPIO pin #${result.pin} (Current state: ${pinStateToEnglish(getPinState(result.pin))})`);
-		      togglePin(result.pin);
+		      togglePin({pin: result.pin, id: result.id});
 		      if (result.type === 'oneshot') {
-		        togglePin(result.pin);
+		        togglePin({pin: result.pin, id: result.id});
 		      }
 		      loadPinsState();
 		    break;
