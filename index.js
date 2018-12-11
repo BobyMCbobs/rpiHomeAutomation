@@ -46,6 +46,14 @@ function pinStateToEnglish(state) {
   // convert 0 and 1 to low and high
   if (state === 0) return "low";
   else if (state === 1) return "high";
+  else return undefined;
+}
+
+function resolvePinFromId(id) {
+  for (i in dbData.buttons) {
+    if (dbData.buttons[i].id === id) return dbData.buttons[i].pin;
+  }
+  return undefined;
 }
 
 function writePin({pin, mode = "OUTPUT", state}) {
@@ -127,10 +135,10 @@ http.createServer((req, res) => {
 		  var result = JSON.parse(result);
 		  switch (result.sendType) {
 		    case 'buttonAction':
-		      console.log(`[PINTOGGLE] Toggling GPIO pin #${result.pin} (Current state: ${pinStateToEnglish(getPinState(result.pin))})`);
-		      togglePin({pin: result.pin, id: result.id});
+		      console.log(`[PINTOGGLE] Toggling GPIO pin #${resolvePinFromId(result.id)} (Current state: ${pinStateToEnglish(getPinState(resolvePinFromId(result.id)))})`);
+		      togglePin({pin: resolvePinFromId(result.id), id: result.id});
 		      if (result.type === 'oneshot') {
-		        togglePin({pin: result.pin, id: result.id});
+		        togglePin({pin: resolvePinFromId(result.id), id: result.id});
 		      }
 		      loadPinsState();
 		    break;

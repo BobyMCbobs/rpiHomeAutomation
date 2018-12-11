@@ -26,7 +26,7 @@ function idise(text) {
 }
 
 function sendToggle(pin, type, sendType, id) {
-  $.post("./", JSON.stringify({pin: pin, type: type, sendType: sendType, id: id}), function(result) {
+  $.post("./", JSON.stringify({type: type, sendType: sendType, id: id}), function(result) {
     console.log(result);
   });
   setTimeout(() => {
